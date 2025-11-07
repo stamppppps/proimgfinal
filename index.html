@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Immersia 360 – Mobile Stitch · Kasetsart University</title>
+
+  <!-- Pannellum -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+  <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+
+  <style>
+    :root{
+      --ku-green:#007a33; --ku-green-700:#00662a; --ku-green-50:#e6f4ec;
+      --bg:#ffffff; --fg:#0b1b14; --muted:#6b7f74; --line:#e8eee9;
+      --card:#ffffff; --shadow:0 10px 24px rgba(0,0,0,.06); --radius:16px;
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Thai", "Noto Sans", sans-serif;
+      color:var(--fg);
+      background:linear-gradient(180deg,var(--ku-green-50),#ffffff 240px) no-repeat,var(--bg);
+    }
+    .ku-header{max-width:1100px;margin:0 auto;padding:20px 16px 0;display:flex;align-items:center;gap:14px}
+    .ku-badge{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:var(--ku-green);color:#fff;box-shadow:var(--shadow);overflow:hidden}
+    .ku-badge svg{width:100%;height:100%}
+    .ku-title b{font-size:18px;color:var(--ku-green-700)}
+    .ku-title span{display:block;font-size:13px;color:var(--muted)}
+    .wrap{max-width:1100px;margin:18px auto 32px;padding:0 16px}
+    .grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:18px}
+    @media (max-width:960px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    h1{font-size:22px;margin:0 0 6px;color:var(--ku-green-700)}
+    .muted{color:var(--muted);margin:4px 0 14px}
+    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+    input[type="number"],select,input[type="text"]{
+      background:#fff;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;outline:none;
+      transition:box-shadow .15s ease,border-color .15s ease
+    }
+    input[type="file"]{color:var(--fg)}
+    input:focus,select:focus{border-color:var(--ku-green);box-shadow:0 0 0 3px rgba(0,122,51,.12)}
+    button{
+      padding:10px 14px;border-radius:12px;border:0;cursor:pointer;font-weight:600;
+      background:var(--ku-green);color:#fff;transition:transform .04s ease,filter .15s ease,box-shadow .15s ease;
+      box-shadow:0 4px 14px rgba(0,122,51,.18)
+    }
+    button:hover{filter:brightness(1.05)} button:active{transform:translateY(1px)}
+    button.secondary{background:#f2f7f4;color:#0b1b14;box-shadow:none;border:1px solid var(--line)}
+    #preview{width:100%;max-height:65vh;object-fit:contain;border-radius:14px;display:none;margin-top:12px;border:1px solid var(--line)}
+    #thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    #thumbs img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+    .hint{color:var(--muted);font-size:13px}
+    .hr{border-top:1px solid var(--line);margin:14px 0}
+    #panoWrap{display:none;position:fixed;inset:0;background:#000;z-index:90}
+    #panoWrap .close{position:absolute;top:12px;right:12px;z-index:100;background:#fff;color:#000;border:0;padding:8px 12px;border-radius:10px;cursor:pointer}
+    #pano{width:100%;height:100%}
+    .side h2{font-size:18px;margin:0 0 8px;color:var(--ku-green-700)}
+    .note{background:var(--ku-green-50);border:1px solid var(--line);padding:10px 12px;border-radius:12px;font-size:13px;color:#0b1b14}
+    .kubadge{display:inline-block;background:var(--ku-green-50);color:var(--ku-green-700);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px}
+    .footer{max-width:1100px;margin:16px auto 40px;padding:0 16px;color:var(--muted);font-size:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .icon-text{display:inline-flex;align-items:center;gap:6px}
+  </style>
+</head>
+<body>
+
+  <header class="ku-header" aria-label="Kasetsart University">
+    <div class="ku-badge" aria-hidden="true">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" fill="#007a33"/>
+        <g fill="#ffffff">
+          <path d="M14 48V16h6v11l7-11h7l-9 13 10 19h-7l-7-13-1 2.2V48h-6z"/>
+          <path d="M38 16h6v20c0 3.3 1.7 5 5 5s5-1.7 5-5V16h6v20c0 7.1-4.6 12-11 12s-11-4.9-11-12V16z"/>
+        </g>
+      </svg>
+    </div>
+    <div class="ku-title">
+      <b>Kasetsart University</b>
+      <span>Immersia 360 · Mobile Stitch</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <!-- Left: Images -->
+      <section class="card">
+        <h1>Immersia 360 – Stitch</h1>
+        <p class="muted">เลือกภาพอย่างน้อย 2 ภาพ แล้วกด <span class="kubadge">Stitch</span> เพื่อสร้างพาโนรามา (รองรับดูแบบ 360°)</p>
+
+        <div class="row">
+          <label class="hint">API URL</label>
+          <input id="api" type="text" value="http://127.0.0.1:8000/stitch" style="flex:1;min-width:260px">
+        </div>
+
+        <div class="row">
+          <input id="files" type="file" accept="image/*" multiple>
+          <select id="mode">
+            <option value="panorama" selected>panorama</option>
+            <option value="scans">scans</option>
+          </select>
+          <label class="hint">max width</label>
+          <input id="maxw" type="number" value="2000" min="0" step="100" style="width:110px">
+          <button id="go">Stitch</button>
+          <button id="reset" class="secondary">ล้าง</button>
+        </div>
+
+        <div id="thumbs"></div>
+        <div class="hr"></div>
+
+        <p id="status" class="hint">พร้อมอัปโหลด</p>
+        <img id="preview" alt="Panorama preview">
+        <div class="row" style="margin-top:8px">
+          <a id="download" href="#" download="panorama.jpg" style="display:none"><button>ดาวน์โหลด panorama.jpg</button></a>
+          <button id="openNew" class="secondary" style="display:none">เปิดภาพในแท็บใหม่</button>
+          <button id="view360" class="secondary" style="display:none">ดูแบบ 360°</button>
+          <button id="viewMatches" class="secondary" style="display:none">ดูภาพพร้อมเส้นเชื่อม</button>
+        </div>
+      </section>
+
+      <!-- Right: Video -->
+      <aside class="card side">
+        <h2>Stitch จากวิดีโอ</h2>
+        <p class="muted">อัปโหลดวิดีโอ H.264 MP4/MOV ระบบจะสุ่มเฟรมแล้วต่อเป็นภาพพาโนรามา</p>
+        <div class="note">หมุนกล้องช้า ๆ ให้มี overlap 30–60% และหลีกเลี่ยงวัตถุใกล้มาก</div>
+
+        <div class="row" style="margin-top:10px">
+          <input id="video" type="file" accept="video/*">
+          <select id="modeVideo">
+            <option value="panorama" selected>panorama</option>
+            <option value="scans">scans</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label class="hint">frame step</label>
+          <input id="frameStep" type="number" value="10" min="1" step="1" style="width:90px">
+          <label class="hint">max frames</label>
+          <input id="maxFrames" type="number" value="20" min="2" step="1" style="width:90px">
+          <!-- ✅ เพิ่มช่อง max width ฝั่งวิดีโอ -->
+          <label class="hint">max width</label>
+          <input id="maxwVideo" type="number" value="1280" min="0" step="100" style="width:110px">
+          <button id="goVideo">Stitch Video</button>
+          <button id="viewVideoMatches" class="secondary">ดูวิดีโอพร้อมเส้นเชื่อม</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div id="panoWrap">
+    <button class="close" onclick="document.getElementById('panoWrap').style.display='none'">ปิด</button>
+    <div id="pano"></div>
+  </div>
+
+  <footer class="footer">
+    <span>© Kasetsart University · Immersia 360 (demo)</span><span>·</span>
+    <span class="hint">KU Green theme</span>
+  </footer>
+
+  <script>
+    const filesEl = document.getElementById('files');
+    const thumbs = document.getElementById('thumbs');
+    const statusEl = document.getElementById('status');
+    const preview = document.getElementById('preview');
+    const dl = document.getElementById('download');
+    const openNewBtn = document.getElementById('openNew');
+    const view360Btn = document.getElementById('view360');
+    const viewMatchesBtn = document.getElementById('viewMatches');
+    const apiInput = document.getElementById('api');
+    const videoEl = document.getElementById('video');
+
+    let lastBlobURL = null;
+    const saved = localStorage.getItem('imm-api-url');
+    if (saved) apiInput.value = saved;
+    apiInput.onchange = ()=>localStorage.setItem('imm-api-url', apiInput.value.trim());
+
+    filesEl.onchange = ()=>{
+      thumbs.innerHTML='';
+      [...filesEl.files].forEach(f=>{
+        const img=document.createElement('img');
+        img.src=URL.createObjectURL(f);
+        img.onload=()=>URL.revokeObjectURL(img.src);
+        thumbs.appendChild(img);
+      });
+      statusEl.textContent=`เลือกแล้ว ${filesEl.files.length} ไฟล์`;
+    };
+
+    document.getElementById('reset').onclick = ()=>{
+      filesEl.value=''; thumbs.innerHTML='';
+      preview.style.display=dl.style.display=openNewBtn.style.display=view360Btn.style.display=viewMatchesBtn.style.display='none';
+      statusEl.textContent='พร้อมอัปโหลด';
+      if (lastBlobURL) URL.revokeObjectURL(lastBlobURL);
+    };
+
+    function setPreviewFromBlob(blob){
+      if (lastBlobURL) URL.revokeObjectURL(lastBlobURL);
+      lastBlobURL = URL.createObjectURL(blob);
+      preview.src=lastBlobURL; preview.style.display='block';
+      dl.href=lastBlobURL; dl.style.display=openNewBtn.style.display=view360Btn.style.display=viewMatchesBtn.style.display='inline-block';
+    }
+
+    document.getElementById('go').onclick = async ()=>{
+      const fd = new FormData();
+      [...filesEl.files].forEach(f=>fd.append('files',f));
+      fd.append('mode', document.getElementById('mode').value);
+      fd.append('max_width', document.getElementById('maxw').value);
+      statusEl.textContent='⏳ กำลังประมวลผล...';
+      const res=await fetch(apiInput.value.trim(),{method:'POST',body:fd});
+      if(!res.ok){statusEl.textContent='❌ เกิดข้อผิดพลาด';return;}
+      const blob=await res.blob();setPreviewFromBlob(blob);
+      statusEl.textContent='✅ เสร็จแล้ว';
+    };
+
+    openNewBtn.onclick=()=>{if(lastBlobURL)window.open(lastBlobURL,'_blank');};
+    view360Btn.onclick=()=>{
+      if(!lastBlobURL)return;
+      document.getElementById('panoWrap').style.display='block';
+      pannellum.viewer('pano',{type:'equirectangular',panorama:lastBlobURL,autoLoad:true,hfov:100});
+    };
+
+    viewMatchesBtn.onclick=async()=>{
+      if(!filesEl.files.length)return alert('กรุณาเลือกรูปก่อน');
+      const base=apiInput.value.trim().replace(/\/stitch$/,'');
+      const fd=new FormData();[...filesEl.files].forEach(f=>fd.append('files',f));
+      const res=await fetch(base+'/stitch_matches',{method:'POST',body:fd});
+      if(!res.ok)return alert('❌ สร้าง matches ไม่สำเร็จ');
+      const blob=await res.blob();window.open(URL.createObjectURL(blob),'_blank');
+    };
+
+    document.getElementById('goVideo').onclick=async()=>{
+      if(!videoEl.files.length)return alert('กรุณาเลือกวิดีโอก่อน');
+      const base=apiInput.value.trim().replace(/\/stitch$/,'');
+      const fd=new FormData();
+      fd.append('video',videoEl.files[0]);
+      fd.append('mode',document.getElementById('modeVideo').value);
+      fd.append('frame_step',document.getElementById('frameStep').value);
+      fd.append('max_frames',document.getElementById('maxFrames').value);
+      // ✅ ส่ง max_width สำหรับวิดีโอ
+      fd.append('max_width',document.getElementById('maxwVideo').value);
+      const res=await fetch(base+'/stitch_video',{method:'POST',body:fd});
+      if(!res.ok)return alert('❌ Stitch วิดีโอล้มเหลว');
+      const blob=await res.blob();setPreviewFromBlob(blob);
+    };
+
+    document.getElementById('viewVideoMatches').onclick=async()=>{
+      if(!videoEl.files.length)return alert('กรุณาเลือกวิดีโอก่อน');
+      const base=apiInput.value.trim().replace(/\/stitch$/,'');
+      const fd=new FormData();
+      fd.append('video',videoEl.files[0]);
+      fd.append('frame_step',10);
+      fd.append('max_frames',10);
+      const res=await fetch(base+'/stitch_video_matches',{method:'POST',body:fd});
+      if(!res.ok)return alert('❌ ไม่สามารถสร้างภาพ matches จากวิดีโอได้');
+      const blob=await res.blob();window.open(URL.createObjectURL(blob),'_blank');
+    };
+  </script>
+</body>
+</html>
