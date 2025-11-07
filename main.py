@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="."), name="static")
+app.mount("/static",StaticFiles(directory="."),name="static")
 
 @app.get("/")
 def home():
@@ -29,30 +29,30 @@ def health():
 
 @app.post("/stitch")
 async def stitch(
-    files: List[UploadFile] = File(..., description="เลือกรูป >= 2"),
+    files: List[UploadFile] = File(...,description="เลือกรูป >= 2"),
     mode: str = Form("panorama"),
     max_width: int = Form(2000),
 ):
     if len(files) < 2:
-        return JSONResponse({"error": "ต้องมีภาพอย่างน้อย 2 รูป"}, status_code=400)
+        return JSONResponse({"error": "ต้องมีภาพอย่างน้อย 2 รูป"},status_code=400)
 
     images = []
     for f in files:
         raw = await f.read()
-        arr = np.frombuffer(raw, np.uint8)
-        img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+        arr = np.frombuffer(raw,np.uint8)
+        img = cv2.imdecode(arr,cv2.IMREAD_COLOR)
         if img is None:
-            return JSONResponse({"error": f"อ่านไฟล์ไม่ได้: {f.filename}"}, status_code=400)
+            return JSONResponse({"error": f"อ่านไฟล์ไม่ได้: {f.filename}"},status_code=400)
         if max_width and img.shape[1] > max_width:
             scale = max_width / float(img.shape[1])
             img = cv2.resize(
                 img,
-                (int(img.shape[1] * scale), int(img.shape[0] * scale)),
+                (int(img.shape[1] * scale),int(img.shape[0] * scale)),
                 interpolation=cv2.INTER_AREA,
             )
         images.append(img)
 
-    stitch_mode = (
+    stitch_mode =(
         cv2.Stitcher_SCANS if mode.lower() == "scans" else cv2.Stitcher_PANORAMA
     )
     stitcher = cv2.Stitcher_create(stitch_mode)
@@ -73,34 +73,34 @@ async def stitch(
         )
 
     pad = cv2.copyMakeBorder(
-        pano, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=(0, 0, 0)
+        pano, 10, 10, 10, 10,cv2.BORDER_CONSTANT,value=(0, 0, 0)
     )
-    gray = cv2.cvtColor(pad, cv2.COLOR_BGR2GRAY)
-    _, th = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)
-    cnts, _ = cv2.findContours(th, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    gray = cv2.cvtColor(pad,cv2.COLOR_BGR2GRAY)
+    _, th = cv2.threshold(gray,0,255,cv2.THRESH_BINARY)
+    cnts, _ = cv2.findContours(th,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     if cnts:
-        x, y, w, h = cv2.boundingRect(max(cnts, key=cv2.contourArea))
+        x, y, w, h = cv2.boundingRect(max(cnts,key=cv2.contourArea))
         pad = pad[y:y + h, x:x + w]
 
-    ok, out = cv2.imencode(".jpg", pad, [int(cv2.IMWRITE_JPEG_QUALITY), 92])
+    ok, out = cv2.imencode(".jpg",pad,[int(cv2.IMWRITE_JPEG_QUALITY), 92])
     if not ok:
-        return JSONResponse({"error": "บันทึกภาพล้มเหลว"}, status_code=500)
+        return JSONResponse({"error":"บันทึกภาพล้มเหลว"},status_code=500)
 
     return Response(content=out.tobytes(), media_type="image/jpeg")
 
 
-# ======== ฟังก์ชันช่วยเสริม ========
+
 
 def _auto_crop_black_border(bgr_img):
     pad = cv2.copyMakeBorder(
-        bgr_img, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=(0, 0, 0)
+        bgr_img, 10, 10, 10, 10,cv2.BORDER_CONSTANT,value=(0, 0, 0)
     )
-    gray = cv2.cvtColor(pad, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(pad,cv2.COLOR_BGR2GRAY)
     _, th = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)
-    cnts, _ = cv2.findContours(th, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts, _ = cv2.findContours(th, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     if cnts:
-        x, y, w, h = cv2.boundingRect(max(cnts, key=cv2.contourArea))
-        pad = pad[y:y + h, x:x + w]
+        x, y, w, h = cv2.boundingRect(max(cnts,key=cv2.contourArea))
+        pad = pad[y:y + h,x:x + w]
     return pad
 
 
@@ -118,11 +118,11 @@ def _letterbox_to_2to1(bgr_img):
         top = pad_total // 2
         bottom = pad_total - top
         return cv2.copyMakeBorder(
-            bgr_img, top, bottom, 0, 0, cv2.BORDER_CONSTANT, value=(0, 0, 0)
+            bgr_img, top, bottom, 0, 0, cv2.BORDER_CONSTANT,value=(0, 0, 0)
         )
 
 
-def _read_video_frames(tmp_path, frame_step=10, max_frames=20, max_width=1280):
+def _read_video_frames(tmp_path, frame_step=10,max_frames=20,max_width=1280):
     cap = cv2.VideoCapture(tmp_path)
     if not cap.isOpened():
         return [], "เปิดวิดีโอไม่ได้"
@@ -130,7 +130,7 @@ def _read_video_frames(tmp_path, frame_step=10, max_frames=20, max_width=1280):
     idx = 0
     grabbed = True
     while grabbed and len(frames) < max_frames:
-        grabbed, frame = cap.read()
+        grabbed,frame = cap.read()
         if not grabbed:
             break
         if idx % frame_step == 0:
@@ -138,7 +138,7 @@ def _read_video_frames(tmp_path, frame_step=10, max_frames=20, max_width=1280):
                 break
             h, w = frame.shape[:2]
             if max_width and w > max_width:
-                scale = max_width / float(w)
+                scale = max_width/float(w)
                 frame = cv2.resize(
                     frame,
                     (int(w * scale), int(h * scale)),
@@ -148,23 +148,23 @@ def _read_video_frames(tmp_path, frame_step=10, max_frames=20, max_width=1280):
         idx += 1
     cap.release()
     if len(frames) < 2:
-        return [], "ต้องได้เฟรมอย่างน้อย 2 เฟรม"
-    return frames, None
+        return [],"ต้องได้เฟรมอย่างน้อย 2 เฟรม"
+    return frames,None
 
 
 @app.post("/stitch_video")
 async def stitch_video(
-    video: UploadFile = File(..., description="อัปโหลดไฟล์วิดีโอ"),
+    video: UploadFile = File(...,description="อัปโหลดไฟล์วิดีโอ"),
     mode: str = Form("panorama"),
-    frame_step: int = Form(10),
-    max_frames: int = Form(20),
+    frame_step: int = Form(100),
+    max_frames: int = Form(200),
     max_width: int = Form(1280),
     force_equirect_2to1: int = Form(1),
 ):
     try:
         raw = await video.read()
     except Exception:
-        return JSONResponse({"error": "อ่านไฟล์วิดีโอล้มเหลว"}, status_code=400)
+        return JSONResponse({"error":"อ่านไฟล์วิดีโอล้มเหลว"},status_code=400)
 
     try:
         with tempfile.NamedTemporaryFile(
@@ -173,7 +173,7 @@ async def stitch_video(
             tmp.write(raw)
             tmp_path = tmp.name
     except Exception:
-        return JSONResponse({"error": "ไม่สามารถเซฟไฟล์ชั่วคราวได้"}, status_code=500)
+        return JSONResponse({"error": "ไม่สามารถเซฟไฟล์ชั่วคราวได้"},status_code=500)
 
     try:
         frames, err = _read_video_frames(
@@ -185,7 +185,7 @@ async def stitch_video(
         if err:
             return JSONResponse(
                 {
-                    "error": f"extract เฟรมล้มเหลว: {err}",
+                    "error": f"extract เฟรมล้มเหลว:{err}",
                     "hints": [
                         "ตรวจสอบวิดีโอว่าเปิดได้",
                         "เพิ่ม max_frames หรือ ลด frame_step",
@@ -195,7 +195,7 @@ async def stitch_video(
                 status_code=422,
             )
 
-        stitch_mode = (
+        stitch_mode =(
             cv2.Stitcher_SCANS
             if mode.lower() == "scans"
             else cv2.Stitcher_PANORAMA
@@ -233,39 +233,39 @@ async def stitch_video(
             pass
 
 
-# ดูภาพพร้อมเส้นเชื่อม 
+
 
 def _draw_matches_sheet(images, max_width_each=600, max_pairs=4):
     orb = cv2.ORB_create(nfeatures=1500)
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
     panels = []
-    n = min(len(images) - 1, max_pairs)
+    n = min(len(images) - 1,max_pairs)
 
     for i in range(n):
-        a, b = images[i], images[i + 1]
+        a, b = images[i],images[i + 1]
 
         def _resize(img, mw):
             h, w = img.shape[:2]
             if w <= mw:
                 return img
             s = mw / float(w)
-            return cv2.resize(img, (mw, int(h * s)), interpolation=cv2.INTER_AREA)
+            return cv2.resize(img, (mw, int(h * s)),interpolation=cv2.INTER_AREA)
 
-        a_small = _resize(a, max_width_each)
-        b_small = _resize(b, max_width_each)
+        a_small = _resize(a,max_width_each)
+        b_small = _resize(b,max_width_each)
 
-        ka, da = orb.detectAndCompute(a_small, None)
-        kb, db = orb.detectAndCompute(b_small, None)
+        ka, da = orb.detectAndCompute(a_small,None)
+        kb, db = orb.detectAndCompute(b_small,None)
 
         if da is None or db is None:
             panel = np.hstack([a_small, b_small])
         else:
             matches = bf.match(da, db)
-            matches = sorted(matches, key=lambda m: m.distance)[:100]
+            matches = sorted(matches, key=lambda m:m.distance)[:100]
             panel = cv2.drawMatches(a_small, ka, b_small, kb, matches, None, flags=2)
 
-        cv2.putText(panel, f"Pair {i+1}", (10, 25),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+        cv2.putText(panel, f"Pair {i+1}",(10,25),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8,(0, 55,255), 2)
         panels.append(panel)
 
     if not panels:
@@ -309,43 +309,7 @@ async def stitch_matches(
 
     return Response(content=out.tobytes(), media_type="image/jpeg")
 
-@app.post("/stitch_video_matches")
-async def stitch_video_matches(
-    video: UploadFile = File(..., description="อัปโหลดไฟล์วิดีโอ"),
-    frame_step: int = Form(10),          # ข้ามทุกกี่เฟรม
-    max_frames: int = Form(10),          # จำนวนเฟรมสูงสุดที่จะใช้จับคู่
-    max_width: int = Form(800),          # ย่อขนาดความกว้าง
-):
-    """สร้างภาพรวมของเส้นเชื่อมระหว่างเฟรมวิดีโอ"""
-    try:
-        raw = await video.read()
-    except Exception:
-        return JSONResponse({"error": "อ่านไฟล์วิดีโอล้มเหลว"}, status_code=400)
 
-    # บันทึกไฟล์ชั่วคราว
-    try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(video.filename or '')[-1]) as tmp:
-            tmp.write(raw)
-            tmp_path = tmp.name
-    except Exception:
-        return JSONResponse({"error": "ไม่สามารถเซฟไฟล์ชั่วคราวได้"}, status_code=500)
 
-    try:
-        frames, err = _read_video_frames(tmp_path, frame_step=frame_step, max_frames=max_frames, max_width=max_width)
-        if err:
-            return JSONResponse({"error": err}, status_code=422)
-
-        sheet = _draw_matches_sheet(frames, max_width_each=max_width)
-        if sheet is None:
-            return JSONResponse({"error": "ไม่สามารถสร้างภาพ matches จากวิดีโอได้"}, status_code=422)
-
-        ok, out = cv2.imencode(".jpg", sheet, [int(cv2.IMWRITE_JPEG_QUALITY), 92])
-        if not ok:
-            return JSONResponse({"error": "บันทึกภาพ matches ล้มเหลว"}, status_code=500)
-
-        return Response(content=out.tobytes(), media_type="image/jpeg")
-    finally:
-        try:
-            os.remove(tmp_path)
-        except Exception:
-            pass
+      
+       

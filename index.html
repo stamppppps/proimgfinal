@@ -11,9 +11,16 @@
 
   <style>
     :root{
-      --ku-green:#007a33; --ku-green-700:#00662a; --ku-green-50:#e6f4ec;
-      --bg:#ffffff; --fg:#0b1b14; --muted:#6b7f74; --line:#e8eee9;
-      --card:#ffffff; --shadow:0 10px 24px rgba(0,0,0,.06); --radius:16px;
+        --ku-green:#007a33;
+        --ku-green-700:#00662a; 
+        --ku-green-50:#e6f4ec;
+        --bg:#ffffff; 
+        --fg:#0b1b14; 
+        --muted:#6b7f74;
+        --line:#e8eee9;
+        --card:#ffffff; 
+        --shadow:0 10px 24px rgba(0,0,0,.06);
+        --radius:16px;
     }
     *{box-sizing:border-box} html,body{height:100%}
     body{
@@ -22,58 +29,191 @@
       color:var(--fg);
       background:linear-gradient(180deg,var(--ku-green-50),#ffffff 240px) no-repeat,var(--bg);
     }
-    .ku-header{max-width:1100px;margin:0 auto;padding:20px 16px 0;display:flex;align-items:center;gap:14px}
-    .ku-badge{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:var(--ku-green);color:#fff;box-shadow:var(--shadow);overflow:hidden}
-    .ku-badge svg{width:100%;height:100%}
-    .ku-title b{font-size:18px;color:var(--ku-green-700)}
-    .ku-title span{display:block;font-size:13px;color:var(--muted)}
-    .wrap{max-width:1100px;margin:18px auto 32px;padding:0 16px}
-    .grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:18px}
-    @media (max-width:960px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
-    h1{font-size:22px;margin:0 0 6px;color:var(--ku-green-700)}
-    .muted{color:var(--muted);margin:4px 0 14px}
-    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+    .ku-header{
+      max-width:1150px;
+      margin:0 auto;
+      padding:20px 16px 0;
+      display:flex;align-items:center;
+      gap:14px
+    }
+    .ku-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--ku-green);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+}
+
+    .ku-badge svg{
+      width:100%;height:100%
+    }
+    .ku-title b{
+      font-size:18px;color:var(--ku-green-700)
+    }
+    .ku-title span{
+      display:block;
+      font-size:13px;
+      color:var(--muted)
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:18px auto 32px;
+      padding:0 16px
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1.2fr 0.8fr;
+      gap:18px
+    }
+    @media (max-width:960px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:18px;box-shadow:var(--shadow)
+    }
+    h1{
+      font-size:22px;margin:0 0 6px;
+      color:var(--ku-green-700)
+    }
+    .muted{
+      color:var(--muted);
+      margin:4px 0 14px
+    }
+    .row{
+      display:flex;
+      flex-wrap:wrap;gap:10px;
+      align-items:center;
+      margin-top:10px
+    }
     input[type="number"],select,input[type="text"]{
-      background:#fff;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;outline:none;
+      background:#fff;color:var(--fg);border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      outline:none;
       transition:box-shadow .15s ease,border-color .15s ease
     }
-    input[type="file"]{color:var(--fg)}
-    input:focus,select:focus{border-color:var(--ku-green);box-shadow:0 0 0 3px rgba(0,122,51,.12)}
+    input[type="file"]{
+      color:var(--fg)
+    }
+    input:focus,select:focus{
+      border-color:var(--ku-green);
+      box-shadow:0 0 0 3px rgba(0,122,51,.12)
+    }
     button{
-      padding:10px 14px;border-radius:12px;border:0;cursor:pointer;font-weight:600;
-      background:var(--ku-green);color:#fff;transition:transform .04s ease,filter .15s ease,box-shadow .15s ease;
+      padding:10px 14px;border-radius:12px;
+      border:0;cursor:pointer;font-weight:600;
+      background:var(--ku-green);color:#fff;
+      transition:transform .04s ease,filter .15s ease,box-shadow .15s ease;
       box-shadow:0 4px 14px rgba(0,122,51,.18)
     }
-    button:hover{filter:brightness(1.05)} button:active{transform:translateY(1px)}
-    button.secondary{background:#f2f7f4;color:#0b1b14;box-shadow:none;border:1px solid var(--line)}
-    #preview{width:100%;max-height:65vh;object-fit:contain;border-radius:14px;display:none;margin-top:12px;border:1px solid var(--line)}
-    #thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    #thumbs img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
-    .hint{color:var(--muted);font-size:13px}
-    .hr{border-top:1px solid var(--line);margin:14px 0}
-    #panoWrap{display:none;position:fixed;inset:0;background:#000;z-index:90}
-    #panoWrap .close{position:absolute;top:12px;right:12px;z-index:100;background:#fff;color:#000;border:0;padding:8px 12px;border-radius:10px;cursor:pointer}
-    #pano{width:100%;height:100%}
-    .side h2{font-size:18px;margin:0 0 8px;color:var(--ku-green-700)}
-    .note{background:var(--ku-green-50);border:1px solid var(--line);padding:10px 12px;border-radius:12px;font-size:13px;color:#0b1b14}
-    .kubadge{display:inline-block;background:var(--ku-green-50);color:var(--ku-green-700);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px}
-    .footer{max-width:1100px;margin:16px auto 40px;padding:0 16px;color:var(--muted);font-size:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .icon-text{display:inline-flex;align-items:center;gap:6px}
+    button:hover{filter:brightness(1.05)} 
+    button:active{transform:translateY(1px)}
+    button.secondary{
+      background:#f2f7f4;
+      color:#0b1b14;
+      box-shadow:none;
+      border:1px solid var(--line)
+    }
+    #preview{
+      width:100%;
+      max-height:65vh;
+      object-fit:contain;
+      border-radius:14px;
+      display:none;
+      margin-top:12px;
+      border:1px solid var(--line)
+    }
+    #thumbs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px}
+    #thumbs img{
+      width:84px;
+      height:84px;
+      object-fit:cover;
+      border-radius:10px;
+      border:1px solid var(--line)
+    }
+    .hint{
+      color:var(--muted);
+      font-size:13px
+    }
+    .hr{
+      border-top:1px solid var(--line);
+      margin:14px 0
+    }
+    #panoWrap{
+      display:none;
+      position:fixed;
+      inset:0;background:#000;z-index:90
+    }
+    #panoWrap .close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      z-index:100;
+      background:#fff;
+      color:#000;border:0;
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer
+    }
+    #pano{
+      width:100%;
+      height:100%
+    }
+    .side h2{
+      font-size:18px;
+      margin:0 0 8px;
+      color:var(--ku-green-700)
+    }
+    .note{
+      background:var(--ku-green-50);
+      border:1px solid var(--line);
+      padding:10px 12px;border-radius:12px;
+      font-size:13px;color:#0b1b14
+    }
+    .kubadge{
+      display:inline-block;
+      background:var(--ku-green-50);
+      color:var(--ku-green-700);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:2px 10px;
+      font-size:12px
+    }
+    .footer{
+      max-width:1100px;
+      margin:16px auto 40px;
+      padding:0 16px;color:var(--muted);
+      font-size:12px;
+      display:flex;gap:8px;
+      align-items:center;
+      flex-wrap:wrap
+    }
+    .icon-text{
+      display:inline-flex;
+      align-items:center;
+      gap:6px
+    }
   </style>
 </head>
 <body>
 
   <header class="ku-header" aria-label="Kasetsart University">
-    <div class="ku-badge" aria-hidden="true">
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-        <rect width="64" height="64" fill="#007a33"/>
-        <g fill="#ffffff">
-          <path d="M14 48V16h6v11l7-11h7l-9 13 10 19h-7l-7-13-1 2.2V48h-6z"/>
-          <path d="M38 16h6v20c0 3.3 1.7 5 5 5s5-1.7 5-5V16h6v20c0 7.1-4.6 12-11 12s-11-4.9-11-12V16z"/>
-        </g>
-      </svg>
-    </div>
+ <div class="ku-badge">KU</div>
+
     <div class="ku-title">
       <b>Kasetsart University</b>
       <span>Immersia 360 · Mobile Stitch</span>
@@ -140,7 +280,7 @@
           <label class="hint">max width</label>
           <input id="maxwVideo" type="number" value="1280" min="0" step="100" style="width:110px">
           <button id="goVideo">Stitch Video</button>
-          <button id="viewVideoMatches" class="secondary">ดูวิดีโอพร้อมเส้นเชื่อม</button>
+          
         </div>
       </aside>
     </div>
@@ -238,20 +378,11 @@
       fd.append('max_width',document.getElementById('maxwVideo').value);
       const res=await fetch(base+'/stitch_video',{method:'POST',body:fd});
       if(!res.ok)return alert('❌ Stitch วิดีโอล้มเหลว');
-      const blob=await res.blob();setPreviewFromBlob(blob);
+      const blob=await res.blob();
+      setPreviewFromBlob(blob);
     };
 
-    document.getElementById('viewVideoMatches').onclick=async()=>{
-      if(!videoEl.files.length)return alert('กรุณาเลือกวิดีโอก่อน');
-      const base=apiInput.value.trim().replace(/\/stitch$/,'');
-      const fd=new FormData();
-      fd.append('video',videoEl.files[0]);
-      fd.append('frame_step',10);
-      fd.append('max_frames',10);
-      const res=await fetch(base+'/stitch_video_matches',{method:'POST',body:fd});
-      if(!res.ok)return alert('❌ ไม่สามารถสร้างภาพ matches จากวิดีโอได้');
-      const blob=await res.blob();window.open(URL.createObjectURL(blob),'_blank');
-    };
+  
   </script>
 </body>
 </html>
